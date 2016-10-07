@@ -50,36 +50,70 @@ theta<-function(x){
 }
 
 #Funci??n que realiza la segunda parte del ejercicio:
-plot_results2<-function(a,n){
+plot_results2<-function(a){
+  N=c(20,50,100,200,500)
   m=500
-  u<-runif(n*m)
-  x<-matrix(Finv(u,a),nrow=n,ncol=m)
-  est <-t(apply(x,2,theta))
-  #Boxplot
-  boxplot(est)
-  sesgo1 <-mean(est[,1])-a
-  sesgo2 <-mean(est[,2])-a
-  ECM1 <- mean((est[,1]-a)^2)
-  ECM1 <- mean((est[,2]-a)^2)
+  #Arreglo para los valores del sesgo
+  s1=c()
+  s2=c()
+  E1=c()
+  E2=c()
+  for (n in N){
+    u<-runif(n*m)
+    x<-matrix(Finv(u,a),nrow=n,ncol=m)
+    est <-t(apply(x,2,theta))
+    #Boxplot
+    boxplot(est)
+    sesgo1 <-mean(est[,1])-a
+    s1=append(s1,sesgo1)
+    sesgo2 <-mean(est[,2])-a
+    s2=append(s2,sesgo2)
+    ECM1 <- mean((est[,1]-a)^2)
+    E1=append(E1,ECM1)
+    ECM2 <- mean((est[,2]-a)^2)
+    E2=append(E2,ECM2)
+  }
+  
+  #Gr??fico log-log del ECM
+  plot(log(N,base=exp(1)),log(E1,base=exp(1)),col='darkgreen',xlab='ln(N)',ylab='ECM')
+  points(log(N,base=exp(1)),log(E2,base=exp(1)),col='darkorange')
+  
+  Ef_rel=E1/E2
+  
+  print(paste('sesgo1= ',toString(s1),' ,a=',a ,nsep=''))
+  print(paste('sesgo2= ',toString(s2),' ,a=',a ,nsep=''))
+  print(paste('E1= ',toString(E1),' ,a=',a ,nsep=''))
+  print(paste('E2= ',toString(E2),' ,a=',a ,nsep=''))
+}
+
+for (a in A){
+  plot_results2(a)
 }
 
 N=c(20,50,100,200,500)
-for (a in A){
-  for (n in N){
-    plot_results2(a,n)
-  }
-}
-
-a=0.3
-n=20
 m=500
-u<-runif(n*m)
-x<-matrix(Finv(u,a),nrow=n,ncol=m)
-est <-t(apply(x,2,theta))
-est[,1]
+#Arreglo para los valores del sesgo
+s1=c()
+s2=c()
+E1=c()
+E2=c()
+n=N[1]
+  u<-runif(n*m)
+  x<-matrix(Finv(u,a),nrow=n,ncol=m)
+  est <-t(apply(x,2,theta))
+  sesgo1 <-mean(est[,1])-a
+  s1=append(s1,sesgo1)
+  sesgo2 <-mean(est[,2])-a
+  s2=append(s2,sesgo2)
+  ECM1 <- mean((est[,1]-a)^2)
+  E1=append(E1,ECM1)
+  ECM2 <- mean((est[,2]-a)^2)
+  E2=append(E2,ECM2)
 
-
-
-
+title <- bquote(paste('n=',.(n),'; ',expression(alpha),'=',a,sep=""))
+boxplot(est,main=title,names=c(expression(hat(theta)[1]),expression(hat(theta)[2])),col=c('darkgreen','darkorange'))
+  
+  
+  
 
 
