@@ -21,12 +21,14 @@ z<- seq(0.0,1.0,length=1000)
 ecdf1<-ecdf(x)
 
 #Gr??fico de la fda emp??rica y fda de beta(a,1)
-plot(z,F(z,a),type="l",col ="red",main='CDF')
+title <- bquote('CDF; ' ~ alpha~ '='~ .(a))
+plot(z,F(z,a),type="l",col ="red",xlab='z',ylab='CDF',main=title)
 plot(ecdf1,add=TRUE,col="blue")
 
 #Gr??fico de densidad contra histograma
-h<-hist(x)
-plot(h,freq=FALSE,col="blue")
+h<-hist(x,plot=FALSE)
+title <- bquote('Histograma; ' ~ alpha~ '='~ .(a))
+plot(h,freq=FALSE,col="blue",main=title)
 lines(z,f(z,a),col='red')
 
 #k es el n??mero de intervalos para los cuantiles
@@ -34,7 +36,8 @@ k=4
 prob=seq(0.0,1.0,length=k+1)[2:4]
 
 #qq-plot
-plot(z,z,type='l')
+title <- bquote('q-q plot; ' ~ alpha~ '='~ .(a))
+plot(z,z,type='l',xlab='',ylab='',main=title)
 points(quantile(ecdf1,prob),qbeta(prob,a,1))
 }
 
@@ -63,7 +66,9 @@ plot_results2<-function(a){
     x<-matrix(Finv(u,a),nrow=n,ncol=m)
     est <-t(apply(x,2,theta))
     #Boxplot
-    boxplot(est)
+    title <- bquote(n==.(n) ~ alpha==.(a))
+    boxplot(est,main=title,names=c(expression(hat(theta)[1]),expression(hat(theta)[2])),col=c('darkgreen','darkorange'))
+    
     sesgo1 <-mean(est[,1])-a
     s1=append(s1,sesgo1)
     sesgo2 <-mean(est[,2])-a
@@ -75,7 +80,8 @@ plot_results2<-function(a){
   }
   
   #Gr??fico log-log del ECM
-  plot(log(N,base=exp(1)),log(E1,base=exp(1)),col='darkgreen',xlab='ln(N)',ylab='ECM')
+  title <- bquote(alpha ~ '=' ~ .(a))
+  plot(log(N,base=exp(1)),log(E1,base=exp(1)),col='darkgreen',main=title,xlab='ln(N)',ylab='ECM')
   points(log(N,base=exp(1)),log(E2,base=exp(1)),col='darkorange')
   
   Ef_rel=E1/E2
@@ -90,30 +96,5 @@ for (a in A){
   plot_results2(a)
 }
 
-N=c(20,50,100,200,500)
-m=500
-#Arreglo para los valores del sesgo
-s1=c()
-s2=c()
-E1=c()
-E2=c()
-n=N[1]
-  u<-runif(n*m)
-  x<-matrix(Finv(u,a),nrow=n,ncol=m)
-  est <-t(apply(x,2,theta))
-  sesgo1 <-mean(est[,1])-a
-  s1=append(s1,sesgo1)
-  sesgo2 <-mean(est[,2])-a
-  s2=append(s2,sesgo2)
-  ECM1 <- mean((est[,1]-a)^2)
-  E1=append(E1,ECM1)
-  ECM2 <- mean((est[,2]-a)^2)
-  E2=append(E2,ECM2)
-
-title <- bquote(paste('n=',.(n),'; ',expression(alpha),'=',a,sep=""))
-boxplot(est,main=title,names=c(expression(hat(theta)[1]),expression(hat(theta)[2])),col=c('darkgreen','darkorange'))
-  
-  
-  
 
 
