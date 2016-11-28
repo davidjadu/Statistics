@@ -65,6 +65,7 @@ plot_results2<-function(a){
     u<-runif(n*m)
     x<-matrix(Finv(u,a),nrow=n,ncol=m)
     est <-t(apply(x,2,theta))
+    
     #Boxplot
     title <- bquote(n==.(n) ~ alpha==.(a))
     boxplot(est,main=title,names=c(expression(hat(theta)[1]),expression(hat(theta)[2])),col=c('darkgreen','darkorange'))
