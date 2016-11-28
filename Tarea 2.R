@@ -140,6 +140,18 @@ run<-function(){
   plot(N,Efrel2,main=title)
   title <- bquote('Eficiencia relativa; Modelo 3')
   plot(N,Efrel3,main=title)
+  title <- bquote('Error; Modelo 1')
+  plot(N,E1,main=title)
+  title <- bquote('Error; Modelo 2')
+  plot(N,E2,main=title)
+  title <- bquote('Error; Modelo 3')
+  plot(N,E3,main=title)
+  title <- bquote('Error; Modelo 1 Alternativo')
+  plot(N,E1a,main=title)
+  title <- bquote('Error; Modelo 2 Alternativo')
+  plot(N,E2a,main=title)
+  title <- bquote('Error; Modelo 3 Alternativo')
+  plot(N,E3a,main=title)
 }
 
 run()
